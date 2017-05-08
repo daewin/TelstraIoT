@@ -9,7 +9,7 @@ Connection4G conn(true,&shieldif);
 
 TelstraIoT iotPlatform(&conn,&shield);
 
-const char host[] = "tic2017team000.iot.telstra.com";
+const char host[] = "tic2017publicteam14.iot.telstra.com";
 
 char id[8];
 char tenant[32];
