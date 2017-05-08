@@ -16,12 +16,6 @@
 #include <shieldinterface.h>
 #include "IRTemp.h"
 
-ShieldInterface shieldif;
-IoTShield shield(&shieldif);
-Connection4G conn(true,&shieldif);
-
-TelstraIoT iotPlatform(&conn,&shield);
-
 const char host[] = "tic2017publicteam14.iot.telstra.com";
 
 char id[8];
@@ -29,23 +23,33 @@ char tenant[32];
 char username[32];
 char password[32];
 
-static const byte PIN_DATA    = 2; // Choose any pins you like for these
-static const byte PIN_CLOCK   = 3;
-static const byte PIN_ACQUIRE = 4;
+static const byte PIN_DATA    = 3; // Choose any pins you like for these
+static const byte PIN_CLOCK   = 4;
+static const byte PIN_ACQUIRE = 5;
 
 static const TempUnit SCALE=CELSIUS;  // Options are CELSIUS, FAHRENHEIT
 
 IRTemp irTemp(PIN_ACQUIRE, PIN_CLOCK, PIN_DATA);
+ShieldInterface shieldif;
+IoTShield shield(&shieldif);
+Connection4G conn(true,&shieldif);
+TelstraIoT iotPlatform(&conn,&shield);
 
 void setup(void) {
-  Serial.begin(9600);
+  Serial.begin(115200);
+  delay(500);
 
   Serial.println(F("IRTemp for Telstra IoT Team 14"));
   Serial.println(F("=============================="));
-
-  Serial.println(F("===== Waiting for shield ====="));
-  shield.waitUntilShieldIsReady();
-  Serial.println(F("======== Shield Ready ========"));
+  
+  if(!shield.isShieldReady())
+  {
+    Serial.println(F("===== Waiting for shield ====="));
+    shield.waitUntilShieldIsReady();
+  } else {
+    Serial.println(F("======== Shield Ready ========"));
+  }
+  //while(Serial.available()==0); // Wait for serial character before starting
 
   Serial.println(F("Reading credentials..."));
   shield.readCredentials(id, tenant, username, password);
