@@ -9,9 +9,9 @@
 
 #include "IRTemp.h"
 
-static const byte PIN_DATA    = 3; // Choose any pins you like for these
-static const byte PIN_CLOCK   = 4;
-static const byte PIN_ACQUIRE = 5;
+static const byte PIN_DATA    = 11; // Choose any pins you like for these
+static const byte PIN_CLOCK   = 12;
+static const byte PIN_ACQUIRE = 13;
 
 static const TempUnit SCALE=CELSIUS;  // Options are CELSIUS, FAHRENHEIT
 

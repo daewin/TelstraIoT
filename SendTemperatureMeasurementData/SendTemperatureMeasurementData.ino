@@ -14,7 +14,7 @@
 #include <telstraiot.h>
 #include <iotshield.h>
 #include <shieldinterface.h>
-#include "IRTemp.h"
+#include <IRTemp.h>
 
 const char host[] = "tic2017publicteam14.iot.telstra.com";
 
@@ -23,9 +23,9 @@ char tenant[32];
 char username[32];
 char password[32];
 
-static const byte PIN_DATA    = 3; // Choose any pins you like for these
-static const byte PIN_CLOCK   = 4;
-static const byte PIN_ACQUIRE = 5;
+static const byte PIN_DATA    = 4; // Choose any pins you like for these
+static const byte PIN_CLOCK   = 5;
+static const byte PIN_ACQUIRE = 6;
 
 static const TempUnit SCALE=CELSIUS;  // Options are CELSIUS, FAHRENHEIT
 
@@ -72,15 +72,13 @@ void setup(void) {
 }
 
 void loop(void) {
-  delay(1000);
-  
   Serial.println(F("=============================="));
   Serial.println(F("Measuring the Temperature..."));
   float irTemperature = irTemp.getIRTemperature(SCALE);
   printTemperature("IR", irTemperature);
 
-  // Not utilizing ambient light information
   float ambientTemperature = irTemp.getAmbientTemperature(SCALE);
+  printTemperature("Ambient", ambientTemperature);
 
   Serial.println(F("=============================="));
   Serial.println(F("Sending the measurement to the IoT Platform..."));

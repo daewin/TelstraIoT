@@ -19,7 +19,7 @@ ShieldInterface shieldif;
 IoTShield shield(&shieldif);
 Connection4G conn(true, &shieldif);
 
-#define DeviceName "TempDeviceID-New"
+#define DeviceName "TemperatureDevice"
 
 const char host[] = "tic2017publicteam14.iot.telstra.com";
 const char tenant[] = "tic2017publicteam14";
