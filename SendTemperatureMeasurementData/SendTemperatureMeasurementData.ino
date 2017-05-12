@@ -2,8 +2,8 @@
  * Send the Temperature measurements to the Telstra IoT Platform. Based on the reference example by Freetronics.
  * File:        SendTemperatureMeasurementData.ino
  * Author:      Andy Gelme (@geekscape) & Angus Gratton (angus at freetronics. com)
- * Edited By:   Daewin SV Lingam
- * Last Edited: 08/05/2017
+ * Edited By:   The Farmdamentals
+ * Last Edited: 11/05/2017
  * License: GPLv3
  *
  * For more information see www.freetronics.com/irtemp
@@ -29,6 +29,8 @@ static const byte PIN_ACQUIRE = 6;
 
 static const TempUnit SCALE=CELSIUS;  // Options are CELSIUS, FAHRENHEIT
 
+const int buttonPin = 7;
+
 IRTemp irTemp(PIN_ACQUIRE, PIN_CLOCK, PIN_DATA);
 ShieldInterface shieldif;
 IoTShield shield(&shieldif);
@@ -37,6 +39,7 @@ TelstraIoT iotPlatform(&conn,&shield);
 
 void setup(void) {
   Serial.begin(115200);
+  pinMode(buttonPin, INPUT);
   delay(500);
 
   Serial.println(F("IRTemp for Telstra IoT Team 14"));
@@ -72,17 +75,22 @@ void setup(void) {
 }
 
 void loop(void) {
-  Serial.println(F("=============================="));
-  Serial.println(F("Measuring the Temperature..."));
-  float irTemperature = irTemp.getIRTemperature(SCALE);
-  printTemperature("IR", irTemperature);
+    if (digitalRead(buttonPin) == HIGH) {
+    Serial.println(F("Movement detected!"));
+    Serial.println(F("=============================="));
+    Serial.println(F("Measuring the Temperature..."));
+    float irTemperature = irTemp.getIRTemperature(SCALE);
+    printTemperature("IR", irTemperature);
+  
+    Serial.println(F("=============================="));
+    Serial.println(F("Sending the measurement to the IoT Platform..."));
+    iotPlatform.sendMeasurement("TemperatureMeasurement", "TemperatureMeasurement", "Temperature(C)", irTemperature, "Celcius");
+  } else {
+    // Send nothing
+    Serial.println(F("No movement detected!"));
+  }
 
-  float ambientTemperature = irTemp.getAmbientTemperature(SCALE);
-  printTemperature("Ambient", ambientTemperature);
-
-  Serial.println(F("=============================="));
-  Serial.println(F("Sending the measurement to the IoT Platform..."));
-  iotPlatform.sendMeasurement("TemperatureMeasurement", "TemperatureMeasurement", "Temperature(C)", irTemperature, "Celcius");
+  delay(200);
 }
 
 void printTemperature(
