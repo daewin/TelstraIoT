@@ -19,7 +19,7 @@ ShieldInterface shieldif;
 IoTShield shield(&shieldif);
 Connection4G conn(true, &shieldif);
 
-#define DeviceName "TemperatureDevice"
+#define DeviceName "Farmdamental"
 
 const char host[] = "tic2017publicteam14.iot.telstra.com";
 const char tenant[] = "tic2017publicteam14";
@@ -57,7 +57,6 @@ void setup() {
     char id[8];
     const char* supportedMeasurements[1];
     supportedMeasurements[0] = "TemperatureMeasurement";
-    //supportedMeasurements[1] = "AmbientTemperatureMeasurement";
 
     int result = iotPlatform.registerDevice(DeviceName, id, 8, supportedMeasurements, 1);
 
