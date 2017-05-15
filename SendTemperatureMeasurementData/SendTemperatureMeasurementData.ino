@@ -28,6 +28,7 @@ static const byte PIN_ACQUIRE = 6;
 const int motionPin = 7;
 const int readerPin = 9;
 const int heckpin = 10;
+const int kpin = 8;
 
 static const TempUnit SCALE = CELSIUS; // Options are CELSIUS, FAHRENHEIT
 
@@ -39,9 +40,10 @@ TelstraIoT iotPlatform(&conn, &shield);
 
 void setup(void) {
   Serial.begin(115200);
+  pinMode(motionPin, INPUT);
   pinMode(readerPin, INPUT);
   pinMode(heckpin, INPUT);
-  pinMode(motionPin, INPUT);
+  pinMode(kpin, INPUT);
   delay(500);
 
   Serial.println(F("IRTemp for Telstra IoT Team 14"));
@@ -87,7 +89,7 @@ void loop(void) {
   if (currentRFID == 1) {
     // ID set to Sheep One (14738)
     char newId[8] = "14738";
-    
+
     changePlatformCredentials(newId);
     sendMeasurementWhenMovementDetected(newId);
     resetPlatformCredentials();
@@ -95,7 +97,7 @@ void loop(void) {
   } else if (currentRFID == 2) {
     // ID set to Sheep Two (14739)
     char newId[8] = "14739";
-    
+
     changePlatformCredentials(newId);
     sendMeasurementWhenMovementDetected(newId);
     resetPlatformCredentials();
@@ -109,9 +111,9 @@ void loop(void) {
 }
 
 void sendMeasurementWhenMovementDetected(char* newId) {
-  
+
   if (digitalRead(motionPin) == HIGH) {
-    
+
     Serial.println(F("Measuring the Temperature..."));
     float irTemperature = irTemp.getIRTemperature(SCALE);
     printTemperature("IR", irTemperature);
@@ -119,7 +121,7 @@ void sendMeasurementWhenMovementDetected(char* newId) {
     Serial.println(F(" "));
     Serial.print(F("Sending the measurement to the IoT Platform for Sheep with ID: "));
     Serial.println(F(newId));
-    
+
     iotPlatform.sendMeasurement("TemperatureMeasurement", "TemperatureMeasurement", "Temperature(C)", irTemperature, "Celcius");
   } else {
     // Send nothing
@@ -132,14 +134,22 @@ void sendMeasurementWhenMovementDetected(char* newId) {
    Get the RFID tag being scanned, if available. Else, return -1.
 */
 int getRFID() {
-  if ((digitalRead(readerPin) == HIGH) && (digitalRead(heckpin) == LOW)) {
+  if ((digitalRead(readerPin) == LOW) && (digitalRead(heckpin) == HIGH) && (digitalRead(kpin) == LOW)) {
     // Sheep One (14738)
     return 1;
-
-  } else if ((digitalRead(readerPin) == LOW) && (digitalRead(heckpin) == HIGH)) {
+    
+  } else if ((digitalRead(readerPin) == HIGH) && (digitalRead(heckpin) == LOW) && (digitalRead(kpin) == LOW)) {
     // Sheep Two (14739)
+    return -1;
+    
+  } else if ((digitalRead(readerPin) == HIGH) && (digitalRead(heckpin) == LOW) && (digitalRead(kpin) == HIGH)) {
+    // Sheep Three (15925)
+    return -1;
+    
+  } else if ((digitalRead(readerPin) == LOW) && (digitalRead(heckpin) == HIGH) && (digitalRead(kpin) == HIGH)) {
+    // Sheep Four (15764)
     return 2;
-
+    
   } else {
     return -1;
   }

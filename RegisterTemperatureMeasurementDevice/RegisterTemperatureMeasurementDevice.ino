@@ -1,4 +1,4 @@
-/*
+  /*
  * Register the Temperature measurements to the Telstra IoT Platform. Based on the reference registration
  * design by Telstra.
  * File:        RegisterTemperatureMeasurementDevice.ino
