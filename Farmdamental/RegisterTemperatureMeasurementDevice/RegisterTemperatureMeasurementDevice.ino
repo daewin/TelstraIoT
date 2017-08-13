@@ -3,7 +3,7 @@
  * design by Telstra.
  * File:        RegisterTemperatureMeasurementDevice.ino
  * Author:      Telstra
- * Edited by:   The Farmdamentals
+ * Edited by:   Farmdamentals
  * Last Edited: 11/05/2017
  *
  * For more information see https://github.com/telstra/TIC2017
