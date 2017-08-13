@@ -1,7 +1,7 @@
 /*
    Send the Temperature measurements to the Telstra IoT Platform. Based on the reference example by Freetronics and Telstra.
    File:        SendTemperatureMeasurementData.ino
-   Edited By:   The Farmdamentals
+   Edited By:   Farmdamentals
    Last Edited: 12/05/2017
    License: GPLv3
 
